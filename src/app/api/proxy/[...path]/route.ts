@@ -16,9 +16,14 @@ export async function GET(
   const baseUrl = process.env.API_PROXY_BASE_URL ?? DEFAULT_API_BASE_URL;
   const resolvedParams = await params;
   const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
+  const headers = new Headers();
+  const authHeader = request.headers.get("authorization");
+  if (authHeader) {
+    headers.set("authorization", authHeader);
+  }
   const response = await fetch(targetUrl, {
     method: "GET",
-    headers: request.headers,
+    headers,
   });
 
   const body = await response.arrayBuffer();
@@ -35,10 +40,19 @@ export async function POST(
   const baseUrl = process.env.API_PROXY_BASE_URL ?? DEFAULT_API_BASE_URL;
   const resolvedParams = await params;
   const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
+  const headers = new Headers();
+  const authHeader = request.headers.get("authorization");
+  if (authHeader) {
+    headers.set("authorization", authHeader);
+  }
+  const contentType = request.headers.get("content-type");
+  if (contentType) {
+    headers.set("content-type", contentType);
+  }
   const body = await request.arrayBuffer();
   const response = await fetch(targetUrl, {
     method: "POST",
-    headers: request.headers,
+    headers,
     body,
   });
 
@@ -56,10 +70,19 @@ export async function PUT(
   const baseUrl = process.env.API_PROXY_BASE_URL ?? DEFAULT_API_BASE_URL;
   const resolvedParams = await params;
   const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
+  const headers = new Headers();
+  const authHeader = request.headers.get("authorization");
+  if (authHeader) {
+    headers.set("authorization", authHeader);
+  }
+  const contentType = request.headers.get("content-type");
+  if (contentType) {
+    headers.set("content-type", contentType);
+  }
   const body = await request.arrayBuffer();
   const response = await fetch(targetUrl, {
     method: "PUT",
-    headers: request.headers,
+    headers,
     body,
   });
 
