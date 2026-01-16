@@ -176,10 +176,10 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
                   </span>
                 </div>
               )}
-              {recipient.address && (
+              {!!recipient.address && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Address:</span>
-                  <span className="font-semibold text-slate-900 max-w-xs truncate">{recipient.address as string}</span>
+                  <span className="font-semibold text-slate-900 max-w-xs truncate">{String(recipient.address)}</span>
                 </div>
               )}
               {recipient.job && (
