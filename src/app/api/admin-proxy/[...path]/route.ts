@@ -1,17 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const DEFAULT_ADMIN_BASE_URL =
   "https://nafaa-frfve0gyfyatgzh0.uaenorth-01.azurewebsites.net/admin";
 
-function buildTargetUrl(request: Request, baseUrl: string, path: string) {
+function buildTargetUrl(request: NextRequest, baseUrl: string, path: string) {
   const url = new URL(request.url);
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return `${baseUrl}${normalizedPath}${url.search}`;
 }
 
-export async function GET(request: Request, { params }: { params: { path: string[] } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
   const baseUrl = process.env.ADMIN_PROXY_BASE_URL ?? DEFAULT_ADMIN_BASE_URL;
-  const targetUrl = buildTargetUrl(request, baseUrl, params.path.join("/"));
+  const resolvedParams = await params;
+  const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
   const response = await fetch(targetUrl, {
     method: "GET",
     headers: request.headers,
@@ -24,9 +28,13 @@ export async function GET(request: Request, { params }: { params: { path: string
   });
 }
 
-export async function POST(request: Request, { params }: { params: { path: string[] } }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
   const baseUrl = process.env.ADMIN_PROXY_BASE_URL ?? DEFAULT_ADMIN_BASE_URL;
-  const targetUrl = buildTargetUrl(request, baseUrl, params.path.join("/"));
+  const resolvedParams = await params;
+  const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
   const body = await request.arrayBuffer();
   const response = await fetch(targetUrl, {
     method: "POST",
@@ -41,9 +49,13 @@ export async function POST(request: Request, { params }: { params: { path: strin
   });
 }
 
-export async function PUT(request: Request, { params }: { params: { path: string[] } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> }
+) {
   const baseUrl = process.env.ADMIN_PROXY_BASE_URL ?? DEFAULT_ADMIN_BASE_URL;
-  const targetUrl = buildTargetUrl(request, baseUrl, params.path.join("/"));
+  const resolvedParams = await params;
+  const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
   const body = await request.arrayBuffer();
   const response = await fetch(targetUrl, {
     method: "PUT",
