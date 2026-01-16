@@ -125,7 +125,6 @@ export default function CharitiesPage() {
       filtered = filtered.filter(
         (charity) =>
           charity.name.toLowerCase().includes(query) ||
-          charity.owner.toLowerCase().includes(query) ||
           charity.focus.toLowerCase().includes(query) ||
           charity.id.toLowerCase().includes(query)
       );
