@@ -101,6 +101,17 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
   const requests = (recipient?.requests as unknown[]) ?? (recipient?.requestsList as unknown[]) ?? [];
   const requestsCount = Array.isArray(requests) ? requests.length : 0;
   const charity = recipient?.charity as Record<string, unknown> | undefined;
+  const nationalId = recipient?.nationalId as string | number | undefined;
+  const phoneNumber = (recipient?.phoneNumber as string | undefined) ?? (recipient?.phone as string | undefined);
+  const address = recipient?.address as string | undefined;
+  const job = recipient?.job as string | undefined;
+  const dateOfBirth = recipient?.dateOfBirth as string | undefined;
+  const charityName = (charity?.name as string | undefined) ?? (charity?.charityName as string | undefined);
+  const monthlyIncome = recipient?.monthlyIncome as number | string | undefined;
+  const monthlyAssistance = recipient?.monthlyAssistance as number | string | undefined;
+  const maritalStatus = recipient?.maritalStatus as string | undefined;
+  const educationLevel = recipient?.educationLevel as string | undefined;
+  const employmentStatus = recipient?.employmentStatus as string | undefined;
 
   return (
     <section className="space-y-6">
@@ -111,9 +122,9 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
               Recipient Details
             </p>
             <h2 className="font-display mt-2 text-2xl font-semibold tracking-tight text-slate-900">{recipientName}</h2>
-            {!!recipient?.nationalId && (
+            {!!nationalId && (
               <p className="mt-1 text-sm text-slate-500">
-                National ID: {String(recipient.nationalId)}
+                National ID: {String(nationalId)}
               </p>
             )}
             {recipient && (
@@ -162,37 +173,37 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
                 <span className="text-slate-500">Name:</span>
                 <span className="font-semibold text-slate-900">{recipientName}</span>
               </div>
-              {!!recipient.nationalId && (
+              {!!nationalId && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">National ID:</span>
-                  <span className="font-semibold text-slate-900">{String(recipient.nationalId)}</span>
+                  <span className="font-semibold text-slate-900">{String(nationalId)}</span>
                 </div>
               )}
-              {!!(recipient.phoneNumber || recipient.phone) && (
+              {!!phoneNumber && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Phone:</span>
                   <span className="font-semibold text-slate-900">
-                    {String((recipient.phoneNumber as string | undefined) ?? (recipient.phone as string | undefined))}
+                    {String(phoneNumber)}
                   </span>
                 </div>
               )}
-              {!!recipient.address && (
+              {!!address && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Address:</span>
-                  <span className="font-semibold text-slate-900 max-w-xs truncate">{String(recipient.address)}</span>
+                  <span className="font-semibold text-slate-900 max-w-xs truncate">{String(address)}</span>
                 </div>
               )}
-              {recipient.job && (
+              {!!job && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Job:</span>
-                  <span className="font-semibold text-slate-900">{recipient.job as string}</span>
+                  <span className="font-semibold text-slate-900">{String(job)}</span>
                 </div>
               )}
-              {recipient.dateOfBirth && (
+              {!!dateOfBirth && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Date of Birth:</span>
                   <span className="font-semibold text-slate-900">
-                    {new Date(recipient.dateOfBirth as string).toLocaleDateString()}
+                    {new Date(dateOfBirth).toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -212,11 +223,11 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
                   }
                 />
               </div>
-              {(charity?.name || charity?.charityName) && (
+              {!!charityName && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Charity:</span>
                   <span className="font-semibold text-slate-900">
-                    {(charity.name as string | undefined) ?? (charity.charityName as string | undefined)}
+                    {String(charityName)}
                   </span>
                 </div>
               )}
@@ -228,38 +239,38 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
                 <span className="text-slate-500">Requests:</span>
                 <span className="font-semibold text-slate-900">{requestsCount}</span>
               </div>
-              {recipient.monthlyIncome !== undefined && (
+              {monthlyIncome !== undefined && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Monthly Income:</span>
                   <span className="font-semibold text-slate-900">
-                    {(recipient.monthlyIncome as number).toLocaleString()} EGP
+                    {Number(monthlyIncome).toLocaleString()} EGP
                   </span>
                 </div>
               )}
-              {recipient.monthlyAssistance !== undefined && (
+              {monthlyAssistance !== undefined && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Monthly Assistance:</span>
                   <span className="font-semibold text-slate-900">
-                    {(recipient.monthlyAssistance as number).toLocaleString()} EGP
+                    {Number(monthlyAssistance).toLocaleString()} EGP
                   </span>
                 </div>
               )}
-              {recipient.maritalStatus && (
+              {!!maritalStatus && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Marital Status:</span>
-                  <span className="font-semibold text-slate-900">{recipient.maritalStatus as string}</span>
+                  <span className="font-semibold text-slate-900">{String(maritalStatus)}</span>
                 </div>
               )}
-              {recipient.educationLevel && (
+              {!!educationLevel && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Education:</span>
-                  <span className="font-semibold text-slate-900">{recipient.educationLevel as string}</span>
+                  <span className="font-semibold text-slate-900">{String(educationLevel)}</span>
                 </div>
               )}
-              {recipient.employmentStatus && (
+              {!!employmentStatus && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Employment:</span>
-                  <span className="font-semibold text-slate-900">{recipient.employmentStatus as string}</span>
+                  <span className="font-semibold text-slate-900">{String(employmentStatus)}</span>
                 </div>
               )}
             </div>

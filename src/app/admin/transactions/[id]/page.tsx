@@ -134,6 +134,7 @@ export default function TransactionDetailsPage({ params }: TransactionDetailsPro
   const status = (transaction?.status as string | undefined) ?? (transaction?.requestStatus as string | undefined) ?? "Unknown";
   const amount = (transaction?.amount as number | undefined) ?? 0;
   const date = formatDate(transaction?.date ?? transaction?.createdAt ?? transaction?.transactionDate ?? transaction?.submittedAt);
+  const priority = transaction?.priority as string | undefined;
   
   const charity = transaction?.charity as Record<string, unknown> | undefined;
   const charityName = (charity?.name as string | undefined) ?? (charity?.charityName as string | undefined) ?? "N/A";
@@ -142,6 +143,10 @@ export default function TransactionDetailsPage({ params }: TransactionDetailsPro
   const recipientFirstName = (recipient?.firstName as string | undefined) ?? "";
   const recipientLastName = (recipient?.lastName as string | undefined) ?? "";
   const recipientName = `${recipientFirstName} ${recipientLastName}`.trim() || (recipient?.name as string | undefined) || "N/A";
+  const description =
+    (transaction?.description as string | undefined) ??
+    (transaction?.reason as string | undefined) ??
+    undefined;
 
   return (
     <section className="space-y-6">
@@ -198,10 +203,10 @@ export default function TransactionDetailsPage({ params }: TransactionDetailsPro
                 <span className="text-slate-500">Date:</span>
                 <span className="font-semibold text-slate-900">{date}</span>
               </div>
-              {transaction.priority && (
+              {!!priority && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Priority:</span>
-                  <span className="font-semibold text-slate-900">{transaction.priority as string}</span>
+                  <span className="font-semibold text-slate-900">{priority}</span>
                 </div>
               )}
               <div className="flex items-center justify-between border-b border-slate-100 pb-2">
@@ -232,11 +237,11 @@ export default function TransactionDetailsPage({ params }: TransactionDetailsPro
                 <span className="text-slate-500">Recipient:</span>
                 <span className="font-semibold text-slate-900">{recipientName}</span>
               </div>
-              {(transaction.description || transaction.reason) && (
+              {!!description && (
                 <div className="border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Description:</span>
                   <p className="mt-1 font-semibold text-slate-900">
-                    {(transaction.description as string | undefined) ?? (transaction.reason as string | undefined)}
+                    {description}
                   </p>
                 </div>
               )}
