@@ -141,6 +141,10 @@ export default function TransactionModal({ isOpen, onClose, transactionId }: Tra
   const recipientFirstName = (recipient?.firstName as string | undefined) ?? "";
   const recipientLastName = (recipient?.lastName as string | undefined) ?? "";
   const recipientName = `${recipientFirstName} ${recipientLastName}`.trim() || (recipient?.name as string | undefined) || "N/A";
+  const description =
+    (transaction?.description as string | undefined) ??
+    (transaction?.reason as string | undefined) ??
+    undefined;
 
   return (
     <div
@@ -244,11 +248,11 @@ export default function TransactionModal({ isOpen, onClose, transactionId }: Tra
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Recipient</span>
                   <span className="font-semibold text-slate-900">{recipientName}</span>
                 </div>
-                {(transaction.description || transaction.reason) && (
+                {!!description && (
                   <div className="py-3 transition-colors hover:bg-slate-50/70">
                     <span className="block text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Description</span>
                     <p className="mt-2 text-sm font-semibold text-slate-900">
-                      {(transaction.description as string | undefined) ?? (transaction.reason as string | undefined)}
+                      {description}
                     </p>
                   </div>
                 )}
