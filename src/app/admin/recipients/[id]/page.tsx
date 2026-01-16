@@ -168,11 +168,11 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
                   <span className="font-semibold text-slate-900">{String(recipient.nationalId)}</span>
                 </div>
               )}
-              {(recipient.phoneNumber || recipient.phone) && (
+              {!!(recipient.phoneNumber || recipient.phone) && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">Phone:</span>
                   <span className="font-semibold text-slate-900">
-                    {(recipient.phoneNumber as string | undefined) ?? (recipient.phone as string | undefined)}
+                    {String((recipient.phoneNumber as string | undefined) ?? (recipient.phone as string | undefined))}
                   </span>
                 </div>
               )}
