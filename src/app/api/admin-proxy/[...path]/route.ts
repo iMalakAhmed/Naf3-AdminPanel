@@ -27,9 +27,12 @@ export async function GET(
   });
 
   const body = await response.arrayBuffer();
+  const responseHeaders = new Headers(response.headers);
+  responseHeaders.delete("content-encoding");
+  responseHeaders.delete("content-length");
   return new NextResponse(body, {
     status: response.status,
-    headers: response.headers,
+    headers: responseHeaders,
   });
 }
 
@@ -57,9 +60,12 @@ export async function POST(
   });
 
   const responseBody = await response.arrayBuffer();
+  const responseHeaders = new Headers(response.headers);
+  responseHeaders.delete("content-encoding");
+  responseHeaders.delete("content-length");
   return new NextResponse(responseBody, {
     status: response.status,
-    headers: response.headers,
+    headers: responseHeaders,
   });
 }
 
@@ -87,8 +93,11 @@ export async function PUT(
   });
 
   const responseBody = await response.arrayBuffer();
+  const responseHeaders = new Headers(response.headers);
+  responseHeaders.delete("content-encoding");
+  responseHeaders.delete("content-length");
   return new NextResponse(responseBody, {
     status: response.status,
-    headers: response.headers,
+    headers: responseHeaders,
   });
 }
