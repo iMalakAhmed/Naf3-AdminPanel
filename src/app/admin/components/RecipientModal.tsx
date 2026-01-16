@@ -122,6 +122,16 @@ export default function RecipientModal({
     (recipient?.requestCount as number | undefined) ||
     0;
   const charity = recipient?.charity as Record<string, unknown> | undefined;
+  const nationalId = recipient?.nationalId as string | number | undefined;
+  const phoneNumber = (recipient?.phoneNumber as string | undefined) ?? (recipient?.phone as string | undefined);
+  const address = recipient?.address as string | undefined;
+  const job = recipient?.job as string | undefined;
+  const charityName = (charity?.name as string | undefined) ?? (charity?.charityName as string | undefined);
+  const maritalStatus = recipient?.maritalStatus as string | undefined;
+  const educationLevel = recipient?.educationLevel as string | undefined;
+  const employmentStatus = recipient?.employmentStatus as string | undefined;
+  const monthlyIncome = recipient?.monthlyIncome as number | string | undefined;
+  const monthlyAssistance = recipient?.monthlyAssistance as number | string | undefined;
   const caseStatus = resolveCaseStatus(
     recipient?.caseStatus ?? recipient?.isClosed
   );
@@ -190,49 +200,43 @@ export default function RecipientModal({
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Status</span>
                   <StatusPill value={caseStatus === "open" ? "active" : "inactive"} />
                 </div>
-                {!!recipient?.nationalId && (
+                {!!nationalId && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">National ID</span>
                     <span className="font-semibold text-slate-900">
-                      {String(recipient.nationalId)}
+                      {String(nationalId)}
                     </span>
                   </div>
                 )}
-                {!!(recipient?.phoneNumber || recipient?.phone) && (
+                {!!phoneNumber && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Phone</span>
                     <span className="font-semibold text-slate-900">
-                      {String(
-                        (recipient.phoneNumber as string | undefined) ??
-                          (recipient.phone as string | undefined)
-                      )}
+                      {String(phoneNumber)}
                     </span>
                   </div>
                 )}
-                {!!recipient?.address && (
+                {!!address && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Address</span>
                     <span className="font-semibold text-slate-900 max-w-xs truncate">
-                      {String(recipient.address)}
+                      {String(address)}
                     </span>
                   </div>
                 )}
-                {!!recipient?.job && (
+                {!!job && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Job</span>
                     <span className="font-semibold text-slate-900">
-                      {String(recipient.job)}
+                      {String(job)}
                     </span>
                   </div>
                 )}
-                {!!(charity?.name || charity?.charityName) && (
+                {!!charityName && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Charity</span>
                     <span className="font-semibold text-slate-900">
-                      {String(
-                        (charity.name as string | undefined) ??
-                          (charity.charityName as string | undefined)
-                      )}
+                      {String(charityName)}
                     </span>
                   </div>
                 )}
@@ -286,43 +290,43 @@ export default function RecipientModal({
                     {requestsCount}
                   </span>
                 </div>
-                {recipient?.monthlyIncome !== undefined && (
+                {monthlyIncome !== undefined && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Monthly Income</span>
                     <span className="font-semibold text-slate-900">
-                      {Number(recipient.monthlyIncome).toLocaleString()} EGP
+                      {Number(monthlyIncome).toLocaleString()} EGP
                     </span>
                   </div>
                 )}
-                {recipient?.monthlyAssistance !== undefined && (
+                {monthlyAssistance !== undefined && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Monthly Assistance</span>
                     <span className="font-semibold text-slate-900">
-                      {Number(recipient.monthlyAssistance).toLocaleString()} EGP
+                      {Number(monthlyAssistance).toLocaleString()} EGP
                     </span>
                   </div>
                 )}
-                {!!recipient?.maritalStatus && (
+                {!!maritalStatus && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Marital Status</span>
                     <span className="font-semibold text-slate-900">
-                      {String(recipient.maritalStatus)}
+                      {String(maritalStatus)}
                     </span>
                   </div>
                 )}
-                {!!recipient?.educationLevel && (
+                {!!educationLevel && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Education</span>
                     <span className="font-semibold text-slate-900">
-                      {String(recipient.educationLevel)}
+                      {String(educationLevel)}
                     </span>
                   </div>
                 )}
-                {!!recipient?.employmentStatus && (
+                {!!employmentStatus && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Employment</span>
                     <span className="font-semibold text-slate-900">
-                      {String(recipient.employmentStatus)}
+                      {String(employmentStatus)}
                     </span>
                   </div>
                 )}
