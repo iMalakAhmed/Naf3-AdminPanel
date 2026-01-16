@@ -162,10 +162,10 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
                 <span className="text-slate-500">Name:</span>
                 <span className="font-semibold text-slate-900">{recipientName}</span>
               </div>
-              {recipient.nationalId && (
+              {!!recipient.nationalId && (
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <span className="text-slate-500">National ID:</span>
-                  <span className="font-semibold text-slate-900">{recipient.nationalId as string}</span>
+                  <span className="font-semibold text-slate-900">{String(recipient.nationalId)}</span>
                 </div>
               )}
               {(recipient.phoneNumber || recipient.phone) && (
