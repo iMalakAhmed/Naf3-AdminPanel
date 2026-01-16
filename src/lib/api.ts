@@ -7,6 +7,8 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? DEFAULT_API_BASE_URL;
 const ADMIN_BASE_URL =
   process.env.NEXT_PUBLIC_ADMIN_BASE_URL ?? DEFAULT_ADMIN_BASE_URL;
+const PROXY_API_BASE_URL = "/api/proxy";
+const PROXY_ADMIN_BASE_URL = "/api/admin-proxy";
 
 type ApiResult<T> = {
   ok: boolean;
@@ -67,18 +69,21 @@ async function apiFetch<T>(
 }
 
 export async function apiGet<T>(path: string): Promise<ApiResult<T>> {
-  return apiFetch<T>(API_BASE_URL, path, { method: "GET" });
+  const baseUrl = typeof window === "undefined" ? API_BASE_URL : PROXY_API_BASE_URL;
+  return apiFetch<T>(baseUrl, path, { method: "GET" });
 }
 
 export async function apiAdminGet<T>(path: string): Promise<ApiResult<T>> {
-  return apiFetch<T>(ADMIN_BASE_URL, path, { method: "GET" });
+  const baseUrl = typeof window === "undefined" ? ADMIN_BASE_URL : PROXY_ADMIN_BASE_URL;
+  return apiFetch<T>(baseUrl, path, { method: "GET" });
 }
 
 export async function apiPost<T>(
   path: string,
   body: unknown
 ): Promise<ApiResult<T>> {
-  return apiFetch<T>(API_BASE_URL, path, {
+  const baseUrl = typeof window === "undefined" ? API_BASE_URL : PROXY_API_BASE_URL;
+  return apiFetch<T>(baseUrl, path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -89,7 +94,8 @@ export async function apiAdminPost<T>(
   path: string,
   body: unknown
 ): Promise<ApiResult<T>> {
-  return apiFetch<T>(ADMIN_BASE_URL, path, {
+  const baseUrl = typeof window === "undefined" ? ADMIN_BASE_URL : PROXY_ADMIN_BASE_URL;
+  return apiFetch<T>(baseUrl, path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -100,7 +106,8 @@ export async function apiPut<T>(
   path: string,
   body: unknown
 ): Promise<ApiResult<T>> {
-  return apiFetch<T>(API_BASE_URL, path, {
+  const baseUrl = typeof window === "undefined" ? API_BASE_URL : PROXY_API_BASE_URL;
+  return apiFetch<T>(baseUrl, path, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
