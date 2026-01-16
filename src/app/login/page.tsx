@@ -26,9 +26,7 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const loginUrl =
-        process.env.NEXT_PUBLIC_ADMIN_LOGIN_URL ?? DEFAULT_LOGIN_URL;
-      const response = await fetch(loginUrl, {
+      const response = await fetch("/api/auth/admin/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
