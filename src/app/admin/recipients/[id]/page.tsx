@@ -111,9 +111,9 @@ export default function RecipientDetailsPage({ params }: RecipientDetailsProps) 
               Recipient Details
             </p>
             <h2 className="font-display mt-2 text-2xl font-semibold tracking-tight text-slate-900">{recipientName}</h2>
-            {recipient?.nationalId && (
+            {!!recipient?.nationalId && (
               <p className="mt-1 text-sm text-slate-500">
-                National ID: {recipient.nationalId as string}
+                National ID: {String(recipient.nationalId)}
               </p>
             )}
             {recipient && (
