@@ -132,6 +132,7 @@ export default function TransactionModal({ isOpen, onClose, transactionId }: Tra
   const status = (transaction?.status as string | undefined) ?? (transaction?.requestStatus as string | undefined) ?? "Unknown";
   const amount = (transaction?.amount as number | undefined) ?? 0;
   const date = formatDate(transaction?.date ?? transaction?.createdAt ?? transaction?.transactionDate ?? transaction?.submittedAt);
+  const priority = transaction?.priority as string | undefined;
   
   const charity = transaction?.charity as Record<string, unknown> | undefined;
   const charityName = (charity?.name as string | undefined) ?? (charity?.charityName as string | undefined) ?? "N/A";
@@ -229,10 +230,10 @@ export default function TransactionModal({ isOpen, onClose, transactionId }: Tra
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Date</span>
                   <span className="font-semibold text-slate-900">{date}</span>
                 </div>
-                {transaction.priority && (
+                {!!priority && (
                   <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
                     <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Priority</span>
-                    <span className="font-semibold text-slate-900">{transaction.priority as string}</span>
+                    <span className="font-semibold text-slate-900">{priority}</span>
                   </div>
                 )}
                 <div className="flex items-center justify-between py-3 transition-colors hover:bg-slate-50/70">
