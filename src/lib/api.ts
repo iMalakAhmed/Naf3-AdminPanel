@@ -58,6 +58,16 @@ async function apiFetch<T>(
   }
 
   if (!response.ok) {
+    if (
+      (response.status === 401 || response.status === 403) &&
+      typeof window !== "undefined"
+    ) {
+      localStorage.removeItem("naf3_admin_auth");
+      document.cookie = "naf3_admin_token=; path=/; max-age=0; samesite=lax";
+      if (window.location.pathname !== "/login") {
+        window.location.replace("/login");
+      }
+    }
     return {
       ok: false,
       data: json,

@@ -150,20 +150,20 @@ export default function TransactionDetailsPage({ params }: TransactionDetailsPro
 
   return (
     <section className="space-y-6">
-      <div className="rounded-3xl border border-slate-200/70 bg-white/95 p-6 shadow-[0_22px_60px_-50px_rgba(2,44,43,0.35)] backdrop-blur transition-all duration-300 hover:shadow-[0_22px_60px_-40px_rgba(2,44,43,0.4)]">
-        <div className="flex items-center justify-between">
+      <div className="rounded-2xl border border-slate-200/70 bg-white/95 p-4 shadow-[0_22px_60px_-50px_rgba(2,44,43,0.35)] backdrop-blur transition-all duration-300 hover:shadow-[0_22px_60px_-40px_rgba(2,44,43,0.4)] sm:rounded-3xl sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
               Transaction Details
             </p>
-            <h2 className="font-display mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+            <h2 className="font-display mt-2 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
               {isLoading ? "Loading..." : transactionType}
             </h2>
-            <p className="mt-1 text-sm text-slate-500">Transaction ID: {params.id}</p>
+            <p className="mt-1 break-all text-sm text-slate-500">Transaction ID: {params.id}</p>
           </div>
           <button
             onClick={() => router.back()}
-            className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition-all duration-200 hover:border-[var(--brand-teal)] hover:bg-[var(--brand-teal)]/5 hover:text-[var(--brand-teal)] hover:shadow-sm"
+            className="shrink-0 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition-all duration-200 hover:border-[var(--brand-teal)] hover:bg-[var(--brand-teal)]/5 hover:text-[var(--brand-teal)] hover:shadow-sm"
           >
             Back
           </button>

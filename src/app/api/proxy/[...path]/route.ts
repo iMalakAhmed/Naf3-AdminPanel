@@ -17,6 +17,7 @@ export async function GET(
   const resolvedParams = await params;
   const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
   const headers = new Headers();
+  headers.set("accept-encoding", "identity");
   const authHeader = request.headers.get("authorization");
   if (authHeader) {
     headers.set("authorization", authHeader);
@@ -44,6 +45,7 @@ export async function POST(
   const resolvedParams = await params;
   const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
   const headers = new Headers();
+  headers.set("accept-encoding", "identity");
   const authHeader = request.headers.get("authorization");
   if (authHeader) {
     headers.set("authorization", authHeader);
@@ -77,6 +79,7 @@ export async function PUT(
   const resolvedParams = await params;
   const targetUrl = buildTargetUrl(request, baseUrl, resolvedParams.path.join("/"));
   const headers = new Headers();
+  headers.set("accept-encoding", "identity");
   const authHeader = request.headers.get("authorization");
   if (authHeader) {
     headers.set("authorization", authHeader);

@@ -138,11 +138,19 @@ export default function TransactionsPage() {
                 (tx.recipientName as string | undefined) ||
                 undefined;
 
+              const toPartnerRaw = tx.toPartner;
+              const toPartnerObj =
+                toPartnerRaw && typeof toPartnerRaw === "object"
+                  ? (toPartnerRaw as Record<string, unknown>)
+                  : null;
               const partnerId =
-                (tx.toPartner as string | undefined) ??
+                (toPartnerObj?.partnerId as string | undefined) ??
+                (typeof toPartnerRaw === "string" ? toPartnerRaw : undefined) ??
                 (tx.partnerId as string | undefined) ??
-                (tx.partner as string | undefined) ??
                 undefined;
+              const directPartnerName = toPartnerObj
+                ? `${(toPartnerObj.firstName as string | undefined) ?? ""} ${(toPartnerObj.lastName as string | undefined) ?? ""}`.trim() || undefined
+                : undefined;
 
               return {
               id:
@@ -153,6 +161,7 @@ export default function TransactionsPage() {
               status: resolveStatus(tx.status),
               amount: (tx.amount as number | undefined) ?? 0,
               partnerId,
+              partnerName: directPartnerName,
               charityName:
                 (tx.fromCharity as string | undefined) ??
                 (tx.charityName as string | undefined) ??
@@ -192,9 +201,11 @@ export default function TransactionsPage() {
 
             const enriched = mapped.map((tx) => ({
               ...tx,
-              partnerName: tx.partnerId
-                ? partnerMap.get(normalizeId(tx.partnerId))
-                : undefined,
+              partnerName:
+                tx.partnerName ??
+                (tx.partnerId
+                  ? partnerMap.get(normalizeId(tx.partnerId))
+                  : undefined),
             }));
 
             if (isMounted) {
@@ -351,15 +362,15 @@ export default function TransactionsPage() {
   }, [searchQuery, statusFilter, typeFilter, transactions]);
 
   return (
-    <section className="space-y-6">
-      <div className="relative overflow-hidden rounded-3xl border border-[var(--outline)] bg-[color:var(--surface-glass)] p-6 shadow-[0_20px_55px_-45px_rgba(2,44,43,0.35)] backdrop-blur transition-all duration-300 hover:shadow-[0_20px_55px_-40px_rgba(2,44,43,0.4)]">
+    <section className="space-y-4 sm:space-y-6">
+      <div className="relative overflow-hidden rounded-2xl border border-[var(--outline)] bg-[color:var(--surface-glass)] p-4 shadow-[0_20px_55px_-45px_rgba(2,44,43,0.35)] backdrop-blur transition-all duration-300 hover:shadow-[0_20px_55px_-40px_rgba(2,44,43,0.4)] sm:rounded-3xl sm:p-6">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[var(--brand-teal)]/70 via-[var(--brand-teal-soft)]/70 to-[var(--brand-gold)]/70" />
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
               Transactions
             </p>
-            <h2 className="font-display mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+            <h2 className="font-display mt-2 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
               Monitor donations and payments
             </h2>
             <p className="mt-2 text-sm text-slate-500">
@@ -370,18 +381,18 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:flex-wrap">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by charity, recipient, or amount"
-            className="w-full max-w-xs rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md"
+            className="w-full rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md sm:max-w-xs"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md"
+            className="w-full rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md sm:w-auto"
           >
             <option value="all">All statuses</option>
             <option value="InProgress">InProgress</option>
@@ -392,7 +403,7 @@ export default function TransactionsPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md"
+            className="w-full rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md sm:w-auto"
           >
             <option value="all">All types</option>
             <option value="Fund">Fund</option>

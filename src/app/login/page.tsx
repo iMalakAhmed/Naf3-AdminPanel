@@ -5,6 +5,17 @@ import { useRouter } from "next/navigation";
 
 const DEFAULT_LOGIN_URL =
   "https://nafaa-frfve0gyfyatgzh0.uaenorth-01.azurewebsites.net/api/auth/admin/login";
+const AUTH_COOKIE = "naf3_admin_token";
+
+function setAuthCookie(token: string) {
+  document.cookie = `${AUTH_COOKIE}=${encodeURIComponent(
+    token
+  )}; path=/; max-age=604800; samesite=lax`;
+}
+
+function clearAuthCookie() {
+  document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0; samesite=lax`;
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,11 +25,9 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const existing = localStorage.getItem("naf3_admin_auth");
-    if (existing) {
-      router.push("/admin/partners");
-    }
-  }, [router]);
+    localStorage.removeItem("naf3_admin_auth");
+    clearAuthCookie();
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -47,12 +56,20 @@ export default function LoginPage() {
         data?.data?.token ??
         data?.data?.accessToken ??
         null;
+
+      if (!token) {
+        setError("Login succeeded but no access token was returned.");
+        setIsLoading(false);
+        return;
+      }
+
       localStorage.setItem(
         "naf3_admin_auth",
-        JSON.stringify({ token, ...data })
+        JSON.stringify({ ...data, token })
       );
+      setAuthCookie(token);
 
-      router.push("/admin/partners");
+      router.replace("/admin/partners");
     } catch (err) {
       setError("Network error. Please try again.");
     } finally {

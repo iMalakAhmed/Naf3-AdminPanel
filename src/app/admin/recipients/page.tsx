@@ -207,41 +207,34 @@ export default function RecipientsPage() {
   }, [searchQuery, statusFilter, recipients]);
 
   return (
-    <section className="space-y-6">
-      <div className="rounded-3xl border border-slate-200/70 bg-white/95 p-6 shadow-[0_22px_60px_-50px_rgba(2,44,43,0.35)] backdrop-blur transition-all duration-300 hover:shadow-[0_22px_60px_-40px_rgba(2,44,43,0.4)]">
+    <section className="space-y-4 sm:space-y-6">
+      <div className="rounded-2xl border border-slate-200/70 bg-white/95 p-4 shadow-[0_22px_60px_-50px_rgba(2,44,43,0.35)] backdrop-blur transition-all duration-300 hover:shadow-[0_22px_60px_-40px_rgba(2,44,43,0.4)] sm:rounded-3xl sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
               Recipients
             </p>
-            <h2 className="font-display mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+            <h2 className="font-display mt-2 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
               Manage recipients and cases
             </h2>
             <p className="mt-2 text-sm text-slate-500">
               View recipient information, case status, and family details.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {role === "SuperAdmin" && (
-              <button className="rounded-xl border border-[var(--brand-teal)]/40 bg-[var(--brand-teal)]/5 px-4 py-2 text-sm font-semibold text-[var(--brand-teal)] transition-all duration-200 hover:border-[var(--brand-teal)] hover:bg-[var(--brand-teal)]/10 hover:shadow-sm">
-                View closed
-              </button>
-            )}
-          </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:flex-wrap">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by name, national ID, or phone"
-            className="w-full max-w-xs rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-sm shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:bg-white focus:ring-2 focus:ring-[var(--brand-teal)]/20 focus:shadow-md"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-sm shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:bg-white focus:ring-2 focus:ring-[var(--brand-teal)]/20 focus:shadow-md sm:max-w-xs"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-sm shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:bg-white focus:ring-2 focus:ring-[var(--brand-teal)]/20 focus:shadow-md"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50/80 px-4 py-2.5 text-sm shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:bg-white focus:ring-2 focus:ring-[var(--brand-teal)]/20 focus:shadow-md sm:w-auto"
           >
             <option value="all">All cases</option>
             <option value="open">Open</option>

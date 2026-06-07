@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import StatusPill from "../components/StatusPill";
 import CharityModal from "../components/CharityModal";
+import CreateCharityModal from "../components/CreateCharityModal";
 import useAuthRole from "../components/useAuthRole";
 import { apiGet } from "@/lib/api";
 
@@ -59,60 +60,54 @@ export default function CharitiesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedCharityId, setSelectedCharityId] = useState<string | null>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const fetchCharities = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await apiGet<unknown>("/charities");
+      if (!result.ok) {
+        setError(result.error ?? "Failed to load charities.");
+        setCharities([]);
+        setFilteredCharities([]);
+        return;
+      }
+
+      const list = normalizeList<Record<string, unknown>>(result.data);
+      const mapped = list.map((charity) => ({
+        id:
+          (charity.charityId as string | undefined) ??
+          (charity.id as string | undefined) ??
+          "",
+        name:
+          (charity.charityName as string | undefined) ??
+          (charity.name as string | undefined) ??
+          "Unknown Charity",
+        status: resolveCharityStatus(
+          (charity.status as string | undefined) ?? charity.isActive
+        ),
+        focus:
+          (charity.aim as string | undefined) ??
+          (charity.focus as string | undefined) ??
+          (charity.category as string | undefined) ??
+          "General",
+      }));
+
+      setCharities(mapped);
+      setFilteredCharities(mapped);
+    } catch (err) {
+      setError("Failed to load charities.");
+      setCharities([]);
+      setFilteredCharities([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-
-    apiGet<unknown>("/charities")
-      .then((result) => {
-        if (!isMounted) {
-          return;
-        }
-        if (!result.ok) {
-          setError(result.error ?? "Failed to load charities.");
-          setCharities([]);
-          return;
-        }
-
-        const list = normalizeList<Record<string, unknown>>(result.data);
-        const mapped = list.map((charity) => ({
-          id:
-            (charity.charityId as string | undefined) ??
-            (charity.id as string | undefined) ??
-            "",
-          name:
-            (charity.charityName as string | undefined) ??
-            (charity.name as string | undefined) ??
-            "Unknown Charity",
-          status: resolveCharityStatus(
-            (charity.status as string | undefined) ?? charity.isActive
-          ),
-          focus:
-            (charity.aim as string | undefined) ??
-            (charity.focus as string | undefined) ??
-            (charity.category as string | undefined) ??
-            "General",
-        }));
-
-        setCharities(mapped);
-        setFilteredCharities(mapped);
-      })
-      .catch(() => {
-        if (isMounted) {
-          setError("Failed to load charities.");
-          setCharities([]);
-          setFilteredCharities([]);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
+    fetchCharities();
   }, []);
 
   // Filter charities based on search query and status
@@ -139,15 +134,15 @@ export default function CharitiesPage() {
   }, [searchQuery, statusFilter, charities]);
 
   return (
-    <section className="space-y-6">
-      <div className="relative overflow-hidden rounded-3xl border border-[var(--outline)] bg-[color:var(--surface-glass)] p-6 shadow-[0_20px_55px_-45px_rgba(2,44,43,0.35)] backdrop-blur transition-all duration-300 hover:shadow-[0_20px_55px_-40px_rgba(2,44,43,0.4)]">
+    <section className="space-y-4 sm:space-y-6">
+      <div className="relative overflow-hidden rounded-2xl border border-[var(--outline)] bg-[color:var(--surface-glass)] p-4 shadow-[0_20px_55px_-45px_rgba(2,44,43,0.35)] backdrop-blur transition-all duration-300 hover:shadow-[0_20px_55px_-40px_rgba(2,44,43,0.4)] sm:rounded-3xl sm:p-6">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[var(--brand-teal)]/70 via-[var(--brand-teal-soft)]/70 to-[var(--brand-gold)]/70" />
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
               Charities
             </p>
-            <h2 className="font-display mt-2 text-2xl font-semibold tracking-tight text-slate-900">
+            <h2 className="font-display mt-2 text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
               Review and manage charities
             </h2>
             <p className="mt-2 text-sm text-slate-500">
@@ -155,25 +150,26 @@ export default function CharitiesPage() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {role === "SuperAdmin" && (
-              <button className="rounded-xl border border-[var(--brand-teal)]/40 bg-[var(--brand-teal)]/5 px-4 py-2 text-sm font-semibold text-[var(--brand-teal)] shadow-sm transition-all duration-200 hover:border-[var(--brand-teal)] hover:bg-[var(--brand-teal)]/10 hover:shadow-md">
-                View deleted
-              </button>
-            )}
+            <button
+              onClick={() => setIsCreateOpen(true)}
+              className="rounded-xl border border-[var(--brand-teal)] bg-[var(--brand-teal)] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:shadow-md"
+            >
+              Add charity
+            </button>
           </div>
         </div>
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:flex-wrap">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search charities"
-            className="w-full max-w-xs rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md"
+            className="w-full rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 placeholder:text-slate-400 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md sm:max-w-xs"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md"
+            className="w-full rounded-xl border border-slate-200/80 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition-all duration-200 focus:border-[var(--brand-teal)] focus:ring-2 focus:ring-[var(--brand-teal)]/15 focus:shadow-md sm:w-auto"
           >
             <option value="all">All statuses</option>
             <option value="pending">Pending</option>
@@ -255,6 +251,14 @@ export default function CharitiesPage() {
           isOpen={!!selectedCharityId}
           onClose={() => setSelectedCharityId(null)}
           charityId={selectedCharityId}
+        />
+      )}
+
+      {isCreateOpen && (
+        <CreateCharityModal
+          isOpen={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
+          onCreated={fetchCharities}
         />
       )}
     </section>
