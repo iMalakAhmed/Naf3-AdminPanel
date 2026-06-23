@@ -145,6 +145,7 @@ export default function Sidenav({
 }: SidenavProps) {
   const pathname = usePathname();
   const displayName = email?.split("@")[0] ?? role ?? "Admin";
+  const expanded = isOpen || mobileOpen;
 
   return (
     <>
@@ -163,37 +164,55 @@ export default function Sidenav({
           shadow-[18px_0_45px_-32px_rgba(0,48,45,0.9)]
           transition-[width,transform] duration-300 ease-in-out
           ${isOpen ? "w-[280px] lg:w-[315px]" : "lg:w-24"}
-          ${mobileOpen ? "translate-x-0 w-[280px]" : "-translate-x-full lg:translate-x-0"}
+          ${
+            mobileOpen
+              ? "translate-x-0 w-[280px]"
+              : "-translate-x-full lg:translate-x-0"
+          }
         `}
       >
         <div
-          className={`flex border-b border-white/14 min-h-[100px] lg:min-h-[118px] ${
-            isOpen || mobileOpen
-              ? "flex-row items-center gap-3 px-4"
+          className={`relative flex border-b border-white/14 min-h-[100px] lg:min-h-[118px] ${
+            expanded
+              ? "flex-row items-center gap-4 px-5 pr-14"
               : "flex-col items-center justify-center gap-2 py-4"
           }`}
         >
           <div
-            className={`shrink-0 rounded-[15px] bg-slate-200/90 shadow-sm transition-all duration-300 ${
-              isOpen || mobileOpen
-                ? "h-[50px] w-[50px] lg:h-[60px] lg:w-[60px]"
+            className={`shrink-0 flex items-center justify-center overflow-hidden transition-all duration-300 ${
+              expanded
+                ? "h-[58px] w-[72px] lg:h-[68px] lg:w-[82px]"
                 : "h-[44px] w-[44px]"
             }`}
-          />
-          {(isOpen || mobileOpen) && (
+          >
+            <img
+              src="/LOGO-FILLED-WHITE.svg"
+              alt="Logo"
+              className={`object-contain ${
+                expanded ? "h-full w-full" : "h-[38px] w-[38px]"
+              }`}
+            />
+          </div>
+
+          {expanded && (
             <div className="min-w-0 flex-1 overflow-hidden">
-              <p className="text-sm font-medium text-white/70 lg:text-base">Welcome back!</p>
+              <p className="text-sm font-medium leading-tight text-white/70 lg:text-base">
+                Welcome back!
+              </p>
               <p className="mt-1 truncate text-lg font-bold leading-tight text-white lg:text-xl">
                 {displayName}
               </p>
             </div>
           )}
+
           {/* Desktop collapse toggle */}
           <button
             type="button"
             onClick={toggleSidebar}
             title="Toggle sidebar"
-            className="hidden lg:grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white/90 transition hover:bg-white/10 hover:text-white"
+            className={`hidden lg:grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white/90 transition hover:bg-white/10 hover:text-white ${
+              expanded ? "absolute right-5 top-1/2 -translate-y-1/2" : ""
+            }`}
           >
             <svg
               viewBox="0 0 24 24"
@@ -212,12 +231,13 @@ export default function Sidenav({
               />
             </svg>
           </button>
+
           {/* Mobile close button */}
           <button
             type="button"
             onClick={onMobileClose}
             title="Close menu"
-            className="lg:hidden grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white/90 transition hover:bg-white/10 hover:text-white"
+            className="lg:hidden absolute right-4 top-1/2 grid h-10 w-10 -translate-y-1/2 shrink-0 place-items-center rounded-xl text-white/90 transition hover:bg-white/10 hover:text-white"
           >
             <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
               <path
@@ -234,12 +254,13 @@ export default function Sidenav({
         <nav className="flex-1 px-3 py-6 lg:py-8">
           <div className="space-y-3 lg:space-y-5">
             {navItems
-              .filter((item) => (item.superAdminOnly ? role === "SuperAdmin" : true))
+              .filter((item) =>
+                item.superAdminOnly ? role === "SuperAdmin" : true
+              )
               .map((item) => {
                 const active =
                   pathname === item.href || pathname.startsWith(`${item.href}/`);
                 const Icon = item.icon;
-                const expanded = isOpen || mobileOpen;
 
                 return (
                   <Link
@@ -251,12 +272,19 @@ export default function Sidenav({
                       active
                         ? "bg-[linear-gradient(90deg,#22c9bd_0%,#0ba09a_100%)] text-white shadow-[0_15px_30px_-18px_rgba(23,210,199,0.95)]"
                         : "text-white/90 hover:bg-white/8 hover:text-white"
-                    } ${expanded ? "justify-start px-4 lg:px-5" : "justify-center px-0"}`}
+                    } ${
+                      expanded
+                        ? "justify-start px-4 lg:px-5"
+                        : "justify-center px-0"
+                    }`}
                   >
                     <Icon className="h-6 w-6 lg:h-7 lg:w-7 shrink-0 text-white" />
+
                     <span
                       className={`min-w-0 overflow-hidden whitespace-nowrap transition-all duration-300 ${
-                        expanded ? "max-w-[210px] opacity-100" : "max-w-0 opacity-0"
+                        expanded
+                          ? "max-w-[210px] opacity-100"
+                          : "max-w-0 opacity-0"
                       }`}
                     >
                       {item.label}
@@ -273,10 +301,14 @@ export default function Sidenav({
             onClick={onLogout}
             title="Logout"
             className={`flex h-[52px] lg:h-[60px] w-full items-center gap-4 rounded-[16px] text-base lg:text-xl font-medium text-white/90 transition hover:bg-white/8 hover:text-white ${
-              isOpen || mobileOpen ? "justify-start px-4 lg:px-5" : "justify-center px-0"
+              expanded ? "justify-start px-4 lg:px-5" : "justify-center px-0"
             }`}
           >
-            <svg viewBox="0 0 24 24" className="h-6 w-6 lg:h-7 lg:w-7 shrink-0" aria-hidden>
+            <svg
+              viewBox="0 0 24 24"
+              className="h-6 w-6 lg:h-7 lg:w-7 shrink-0"
+              aria-hidden
+            >
               <path
                 d="M15 17l5-5-5-5M20 12H8M11 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"
                 fill="none"
@@ -286,9 +318,10 @@ export default function Sidenav({
                 strokeLinejoin="round"
               />
             </svg>
+
             <span
               className={`overflow-hidden whitespace-nowrap transition-all duration-300 ${
-                isOpen || mobileOpen ? "max-w-[160px] opacity-100" : "max-w-0 opacity-0"
+                expanded ? "max-w-[160px] opacity-100" : "max-w-0 opacity-0"
               }`}
             >
               Logout
